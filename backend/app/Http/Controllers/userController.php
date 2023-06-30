@@ -15,6 +15,7 @@ class userController extends Controller
     public function index()
     {
         $users = User::all();
+        // $users = User::where('isAdmin', 1)->get();
         return response()->json(['data'=>$users],200);
     }
 
