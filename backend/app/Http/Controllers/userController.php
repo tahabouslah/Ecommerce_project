@@ -25,8 +25,27 @@ class userController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        //
+        {
+    //     $user = new User();
+    //     $user->name = $request->name;
+    //     $user->email = $request->email;
+    //     $user->password = bcrypt($request->password);
+    //     $user->isAdmin = $request->isAdmin;
+    //     $user->photo = $request->photo;
+    //     $user->save();
+    //     return response()->json(['message'=>'user Created'], 201);
+
+     $user = User::create([
+         "name" => $request->name,
+         "email" => $request->email,
+         "password" => bcrypt($request->password),
+         "isAdmin" => $request->isAdmin,
+         "photo" => $request->photo
+     ]);    
+    
+         return response()->json(['message'=>'user Created'], 201);
+   
+
     }
 
     /**
@@ -38,7 +57,11 @@ class userController extends Controller
     public function show($id)
     {
         $user = User::find($id);
-        return response()->json([$user], 200);
+        if($user != null){
+            return response()->json([$user], 200);
+        }else {
+            return response()->json(['Error'=>'User Not Found'], 404);
+        }
     }
 
     /**
@@ -50,7 +73,20 @@ class userController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $user = User::find($id);
+        if($user != null){
+             $user->update([
+                "name" => $request->name,
+                "email" => $request->email,
+                "password" => bcrypt($request->password),
+                "isAdmin" => $request->isAdmin,
+                "photo" => $request->photo
+             ]);
+
+             return response()->json(['message'=>'updated'],200);
+        }else {
+            return response()->json(['Error'=>'User Not Found'], 404);
+        }
     }
 
     /**
@@ -61,6 +97,12 @@ class userController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::find($id);
+        if($user != null){
+             $user->delete();
+             return 'Deleted!!';
+        }else {
+            return response()->json(['Error'=>'User Not Found'], 404);
+        }
     }
 }
